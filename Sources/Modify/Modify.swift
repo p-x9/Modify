@@ -8,7 +8,6 @@ public struct DynamicMemberWrap<T> {
         self.value = value
     }
 
-    @_disfavoredOverload
     public subscript<U>(dynamicMember keyPath: WritableKeyPath<T, U>) -> ((U) -> DynamicMemberWrap<T>) {
         { val in
             var value = self.value
@@ -25,7 +24,6 @@ public struct DynamicMemberWrap<T> {
         }
     }
 
-    @_disfavoredOverload
     public func modify(_ block: ((inout T) -> Void)) -> DynamicMemberWrap<T> {
         var value = self.value
         block(&value)
@@ -47,28 +45,17 @@ public struct AssignmentDynamicMemberWrap<T> {
         self.pointer = withUnsafeMutablePointer(to: &value) { $0 }
     }
 
-    @_disfavoredOverload
-    public subscript<U>(dynamicMember keyPath: WritableKeyPath<T, U>) -> ((U) -> AssignmentDynamicMemberWrap<T>) {
-        { val in
+    public subscript<U>(dynamicMember keyPath: WritableKeyPath<T, U>) -> DiscardableResultClosure<U, AssignmentDynamicMemberWrap<T>> {
+        DiscardableResultClosure { val in
             pointer.pointee[keyPath: keyPath] = val
             return AssignmentDynamicMemberWrap(&pointer.pointee)
         }
     }
 
-    public subscript<U>(dynamicMember keyPath: WritableKeyPath<T, U>) -> ((U) -> Void) {
-        { val in
-            pointer.pointee[keyPath: keyPath] = val
-        }
-    }
-
-    @_disfavoredOverload
+    @discardableResult
     public func modify(_ block: ((inout T) -> Void)) -> AssignmentDynamicMemberWrap<T> {
         block(&pointer.pointee)
         return AssignmentDynamicMemberWrap(&pointer.pointee)
-    }
-
-    public func modify(_ block: ((inout T) -> Void)) {
-        block(&pointer.pointee)
     }
 }
 
