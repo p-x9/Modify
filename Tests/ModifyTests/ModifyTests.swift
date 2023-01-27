@@ -13,11 +13,12 @@ struct Item {
 final class ModifyTests: XCTestCase {
     func testCopyAndAssign() throws {
         let item = Item()
-        let new = item^
+        let new: Item = item^
             .number(2)
             .number(1)
             .text("2")
             .text("1")
+
 
         XCTAssertEqual(new.text, "1")
         XCTAssertEqual(new.number, 1)
@@ -37,7 +38,7 @@ final class ModifyTests: XCTestCase {
 
     func testCopyAndModify() throws {
         let item = Item()
-        let new = item^
+        let new: Item = item^
             .modify {
                 $0.set(text: "1")
             }

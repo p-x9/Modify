@@ -5,7 +5,7 @@ Swift syntax sugar for modifying properties
 ## Usage
 ### Class Type
 ```swift
-let label = UILabel()^
+let label: UILabel = UILabel()^ // Must specify type
     .text("Hello")
     .textColor(.red)
     .backgroundColor(.blue)
@@ -43,7 +43,7 @@ Make a copy and assign a value.
 The original `item` is not modified.
 ```swift
 let item = Item()
-let new = item^
+let new: Item = item^　// Must specify type
     .number(2)
     .number(1)
     .text("2")
