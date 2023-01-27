@@ -60,6 +60,30 @@ public struct AssignmentDynamicMemberWrap<T> {
 }
 
 
+@dynamicMemberLookup
+public struct AssignmentReferenceDynamicMemberWrap<T> where T: AnyObject {
+    private var value: T
+
+    public init(_ value: T) {
+        self.value = value
+    }
+
+    public subscript<U>(dynamicMember keyPath: WritableKeyPath<T, U>) -> DiscardableResultClosure<U, AssignmentReferenceDynamicMemberWrap<T>> {
+        DiscardableResultClosure { val in
+            var value = self.value
+            value[keyPath: keyPath] = val
+            return AssignmentReferenceDynamicMemberWrap(value)
+        }
+    }
+
+    @discardableResult
+    public func modify(_ block: ((T) -> Void)) -> AssignmentReferenceDynamicMemberWrap<T> {
+        block(value)
+        return AssignmentReferenceDynamicMemberWrap(value)
+    }
+}
+
+
 postfix operator ^
 postfix public func ^<T>(lhs: T) -> DynamicMemberWrap<T> {
     return DynamicMemberWrap(lhs)
@@ -68,4 +92,8 @@ postfix public func ^<T>(lhs: T) -> DynamicMemberWrap<T> {
 postfix operator ^=
 postfix public func ^=<T>(lhs: inout T) -> AssignmentDynamicMemberWrap<T> {
     return AssignmentDynamicMemberWrap(&lhs)
+}
+
+postfix public func ^=<T>(lhs: T) -> AssignmentReferenceDynamicMemberWrap<T> where T: AnyObject {
+    return AssignmentReferenceDynamicMemberWrap(lhs)
 }
