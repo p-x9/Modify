@@ -1,11 +1,58 @@
 import XCTest
-@testable import Modify
+import Modify
 
-final class ModifyTests: XCTestCase {
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct
-        // results.
-        XCTAssertEqual(Modify().text, "Hello, World!")
+struct Item {
+    var text: String = ""
+    var number: Int = 0
+
+    mutating func set(text: String) {
+        self.text = text
     }
 }
+
+final class ModifyTests: XCTestCase {
+    func testCopyAndAssign() throws {
+        let item = Item()
+        let new = item^
+            .number(2)
+            .number(1)
+            .text("2")
+            .text("1")
+
+        XCTAssertEqual(new.text, "1")
+        XCTAssertEqual(new.number, 1)
+    }
+
+    func testAssign() throws {
+        var item = Item()
+        item^=
+            .number(2)
+            .number(1)
+            .text("2")
+            .text("1")
+
+        XCTAssertEqual(item.text, "1")
+        XCTAssertEqual(item.number, 1)
+    }
+
+    func testCopyAndModify() throws {
+        let item = Item()
+        let new = item^
+            .modify {
+                $0.set(text: "1")
+            }
+
+        XCTAssertEqual(new.text, "1")
+    }
+
+    func testModify() throws {
+        var item = Item()
+        item^=
+            .modify {
+                $0.set(text: "1")
+            }
+
+        XCTAssertEqual(item.text, "1")
+    }
+}
+
