@@ -5,7 +5,7 @@ Swift syntax sugar for modifying properties
 ## Usage
 ### Class Type
 ```swift
-let label: UILabel = UILabel()^ // Must specify type
+let label: UILabel = UILabel()^ // Specify type
     .text("Hello")
     .textColor(.red)
     .backgroundColor(.blue)
@@ -13,6 +13,18 @@ let label: UILabel = UILabel()^ // Must specify type
         $0.sizeToFit()
     }
     .text("Hello2")
+
+/* or */
+
+let label = UILabel()^
+    .text("Hello")
+    .textColor(.red)
+    .backgroundColor(.blue)
+    .modify {
+        $0.sizeToFit()
+    }
+    .text("Hello2")
+    .value // Append `value` at the end
 
 /* or */
 
@@ -44,13 +56,24 @@ Make a copy and assign a value.
 The original `item` is not modified.
 ```swift
 let item = Item()
-let new: Item = item^　// Must specify type
+let new: Item = item^　// Specify type
     .number(2)
     .number(1)
     .text("2")
     .modify {
         $0.set(text: "1")
     }
+
+/* or */
+
+let new = item^
+    .number(2)
+    .number(1)
+    .text("2")
+    .modify {
+        $0.set(text: "1")
+    }
+    .value // Append `value` at the end
 
 print(item) // Item(text: "", number: 0)
 print(new) // Item(text: "1", number: 1)
