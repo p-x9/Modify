@@ -16,6 +16,7 @@ public struct DynamicMemberWrap<T> {
         }
     }
 
+    @_disfavoredOverload
     public subscript<U>(dynamicMember keyPath: WritableKeyPath<T, U>) -> ((U) -> T) {
         { val in
             var value = self.value
@@ -30,6 +31,7 @@ public struct DynamicMemberWrap<T> {
         return DynamicMemberWrap(value)
     }
 
+    @_disfavoredOverload
     public func modify(_ block: ((inout T) -> Void)) -> T {
         var value = self.value
         block(&value)
