@@ -60,6 +60,11 @@ public struct AssignmentDynamicMemberWrap<T> {
         self.pointer = withUnsafeMutablePointer(to: &value) { $0 }
     }
 
+    @discardableResult
+    public func callAsFunction(_ block: ((inout T) -> Void)) -> AssignmentDynamicMemberWrap<T> {
+        modify(block)
+    }
+
     public subscript<U>(dynamicMember keyPath: WritableKeyPath<T, U>) -> DiscardableResultClosure<U, AssignmentDynamicMemberWrap<T>> {
         DiscardableResultClosure { val in
             pointer.pointee[keyPath: keyPath] = val
@@ -81,6 +86,11 @@ public struct AssignmentReferenceDynamicMemberWrap<T> where T: AnyObject {
 
     public init(_ value: T) {
         self.value = value
+    }
+
+    @discardableResult
+    public func callAsFunction(_ block: ((T) -> Void)) -> AssignmentReferenceDynamicMemberWrap<T> {
+        modify(block)
     }
 
     public subscript<U>(dynamicMember keyPath: WritableKeyPath<T, U>) -> DiscardableResultClosure<U, AssignmentReferenceDynamicMemberWrap<T>> {

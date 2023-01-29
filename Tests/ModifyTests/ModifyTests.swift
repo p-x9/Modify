@@ -63,5 +63,14 @@ final class ModifyTests: XCTestCase {
 
         XCTAssertEqual(new.text, "1")
     }
+
+    func testAssignCallAsFunction() throws {
+        var item = Item()
+        item^= {
+            $0.set(text: "1")
+        }
+
+        XCTAssertEqual(item.text, "1")
+    }
 }
 
