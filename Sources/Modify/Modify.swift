@@ -2,15 +2,19 @@ import Foundation
 
 @dynamicMemberLookup
 public struct DynamicMemberWrap<T> {
-    private var value: T
+    private var _value: T
+
+    public var value: T {
+        _value
+    }
 
     public init(_ value: T) {
-        self.value = value
+        self._value = value
     }
 
     public subscript<U>(dynamicMember keyPath: WritableKeyPath<T, U>) -> ((U) -> DynamicMemberWrap<T>) {
         { val in
-            var value = self.value
+            var value = self._value
             value[keyPath: keyPath] = val
             return DynamicMemberWrap(value)
         }
@@ -19,21 +23,21 @@ public struct DynamicMemberWrap<T> {
     @_disfavoredOverload
     public subscript<U>(dynamicMember keyPath: WritableKeyPath<T, U>) -> ((U) -> T) {
         { val in
-            var value = self.value
+            var value = self._value
             value[keyPath: keyPath] = val
             return value
         }
     }
 
     public func modify(_ block: ((inout T) -> Void)) -> DynamicMemberWrap<T> {
-        var value = self.value
+        var value = self._value
         block(&value)
         return DynamicMemberWrap(value)
     }
 
     @_disfavoredOverload
     public func modify(_ block: ((inout T) -> Void)) -> T {
-        var value = self.value
+        var value = self._value
         block(&value)
         return value
     }
