@@ -54,23 +54,6 @@ final class ModifyTests: XCTestCase {
             }
 
         XCTAssertEqual(item.text, "1")
-
-        var text = CGRect.zero
-        text^=
-            .origin(.init(x: 89, y: 89))
-
-        var origin = CGPoint.zero
-        origin^=
-            .x(99)
-            .y(.pi)
-
-        text^=
-            .origin(origin)
-
-        print(text^
-            .origin(.zero)
-            .size(.zero)
-        )
     }
 }
 
