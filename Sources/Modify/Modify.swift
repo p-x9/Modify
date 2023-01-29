@@ -12,6 +12,15 @@ public struct DynamicMemberWrap<T> {
         self._value = value
     }
 
+    public func callAsFunction(_ block: ((inout T) -> Void)) -> DynamicMemberWrap<T> {
+        modify(block)
+    }
+
+    @_disfavoredOverload
+    public func callAsFunction(_ block: ((inout T) -> Void)) -> T {
+        modify(block)
+    }
+
     public subscript<U>(dynamicMember keyPath: WritableKeyPath<T, U>) -> ((U) -> DynamicMemberWrap<T>) {
         { val in
             var value = self._value

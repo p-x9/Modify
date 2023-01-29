@@ -94,3 +94,26 @@ item^=
 
 print(item) // Item(text: "1", number: 1)
 ```
+
+### Closure
+
+```swift
+let button: UIButton = UIButton()^ {
+    $0.setTitle("normal", for: .normal)
+    $0.setTitle("disabled", for: .disabled)
+}
+.backgroundColor(.red)
+.clipToBounds(true)
+.isEnabled(true)
+
+/* or */
+
+let button: UIButton = UIButton()^ 
+    .modify {
+        $0.setTitle("normal", for: .normal)
+        $0.setTitle("disabled", for: .disabled)
+    }
+    .backgroundColor(.red)
+    .clipToBounds(true)
+    .isEnabled(true)
+```
